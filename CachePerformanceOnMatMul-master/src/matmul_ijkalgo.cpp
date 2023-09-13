@@ -7,6 +7,16 @@ const int matrixSize = 128; // Change matrix size here
 const int numIndices = 1000;
 const int dataSize = 1000;
 
+void parsec_roi_begin() 
+{
+
+}
+
+void parsec_roi_end() 
+{
+
+}
+
 void scatter(int matrix[matrixSize][matrixSize], int indices[numIndices], int data[dataSize]) {
     for (int i = 0; i < numIndices; ++i) {
         int row = indices[i] % matrixSize;
