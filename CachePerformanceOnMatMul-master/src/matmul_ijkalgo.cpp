@@ -5,8 +5,8 @@
 
 // Constants for matrix and data sizes
 const int MatrixSize = 128;
-const int NumIndices = 128;
-const int DataSize = 128;
+const int NumIndices = 1000;
+const int DataSize = 1000;
 
 // Function to perform Scatter operation
 void ScatterData(int matrix[MatrixSize][MatrixSize], const int indices[NumIndices], const int data[DataSize]) {
