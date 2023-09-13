@@ -3,9 +3,10 @@
 #include <cstdlib>
 #include <ctime>
 
-const int matrixSize = 128; // Change matrix size here
-const int numIndices = 1000;
-const int dataSize = 1000;
+const int matrixSize = 128;
+const int numIndices = 1000; // Change the number of indices here
+const int dataSize = 1000;   // Change the data size here
+
 void parsec_roi_begin() 
 {
 
@@ -17,41 +18,47 @@ void parsec_roi_end()
 }
 
 
-void scatter(int matrix[matrixSize][matrixSize], int indices[numIndices], int data[dataSize]) {
+void gather(const int matrix[matrixSize][matrixSize], const int indices[numIndices], int gatheredData[dataSize]) {
     for (int i = 0; i < numIndices; ++i) {
         int row = indices[i] % matrixSize;
         int col = indices[i] / matrixSize;
         if (row < matrixSize && col < matrixSize) {
-            matrix[row][col] = data[i];
+            gatheredData[i] = matrix[row][col];
         }
     }
 }
 
 int main() {
-    int matrix[matrixSize][matrixSize] = {0};
+    int matrix[matrixSize][matrixSize];
     int indices[numIndices];
-    int data[dataSize];
+    int gatheredData[dataSize];
 
-    // Initialize indices and data randomly (for demonstration purposes)
-    std::srand(static_cast<unsigned int>(std::time(0))); // Use time(0) instead of nullptr
-    for (int i = 0; i < numIndices; ++i) {
-        indices[i] = std::rand() % (matrixSize * matrixSize);
-        data[i] = std::rand();
-    }
+    // Initialize random seed based on current time
+    std::srand(static_cast<unsigned int>(std::time(NULL)));
 
-    // Perform the Scatter operation
-    parsec_roi_begin();
-    scatter(matrix, indices, data);
-    parsec_roi_end();
-
-    // Display the resulting matrix (for demonstration purposes)
-    std::cout << "Resulting Matrix:" << std::endl;
+    // Initialize matrix with random data (for demonstration purposes)
     for (int row = 0; row < matrixSize; ++row) {
         for (int col = 0; col < matrixSize; ++col) {
-            std::cout << matrix[row][col] << " ";
+            matrix[row][col] = std::rand();
         }
-        std::cout << std::endl;
     }
+
+    // Initialize indices randomly
+    for (int i = 0; i < numIndices; ++i) {
+        indices[i] = std::rand() % (matrixSize * matrixSize);
+    }
+
+    // Perform the Gather operation
+    parsec_roi_begin();
+    gather(matrix, indices, gatheredData);
+    parsec_roi_end();
+
+    // Display the gathered data (for demonstration purposes)
+    std::cout << "Gathered Data:" << std::endl;
+    for (int i = 0; i < numIndices; ++i) {
+        std::cout << gatheredData[i] << " ";
+    }
+    std::cout << std::endl;
 
     return 0;
 }
