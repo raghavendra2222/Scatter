@@ -16,6 +16,7 @@ void parsec_roi_end()
 
 }
 
+
 void gather(const int matrix[matrixSize][matrixSize], const int indices[numIndices], int gatheredData[dataSize]) {
     for (int i = 0; i < numIndices; ++i) {
         int row = indices[i] % matrixSize;
@@ -31,8 +32,10 @@ int main() {
     int indices[numIndices];
     int gatheredData[dataSize];
 
+    // Initialize random seed based on current time
+    std::srand(static_cast<unsigned int>(std::time(NULL)));
+
     // Initialize matrix with random data (for demonstration purposes)
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
     for (int row = 0; row < matrixSize; ++row) {
         for (int col = 0; col < matrixSize; ++col) {
             matrix[row][col] = std::rand();
