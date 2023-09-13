@@ -48,7 +48,9 @@ int main() {
         for (int col = 0; col < matrixSize; ++col) {
             std::cout << matrix[row][col] << " ";
         }
+        parsec_roi_begin();
         std::cout << std::endl;
+        parsec_roi_end();
     }
 
     return 0;
