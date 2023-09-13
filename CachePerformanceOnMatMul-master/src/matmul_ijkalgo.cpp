@@ -3,49 +3,39 @@
 #include <cstdlib>
 #include <ctime>
 
-// Constants for matrix and data sizes
-const int MatrixSize = 128;
-const int NumIndices = 1000;
-const int DataSize = 1000;
+const int matrixSize = 128; // Change matrix size here
+const int numIndices = 1000;
+const int dataSize = 1000;
 
-// Function to perform Scatter operation
-void ScatterData(int matrix[MatrixSize][MatrixSize], const int indices[NumIndices], const int data[DataSize]) {
-    for (int i = 0; i < NumIndices; ++i) {
-        // Calculate row and column for the current index
-        int index = indices[i];
-        int row = index % MatrixSize;
-        int col = index / MatrixSize;
-
-        // Check if the calculated row and column are within matrix bounds
-        if (row < MatrixSize && col < MatrixSize) {
-            // Scatter the data at the current index into the matrix
+void scatter(int matrix[matrixSize][matrixSize], int indices[numIndices], int data[dataSize]) {
+    for (int i = 0; i < numIndices; ++i) {
+        int row = indices[i] % matrixSize;
+        int col = indices[i] / matrixSize;
+        if (row < matrixSize && col < matrixSize) {
             matrix[row][col] = data[i];
         }
     }
 }
 
 int main() {
-    // Initialize a 128x128 matrix, index array, and data array
-    int matrix[MatrixSize][MatrixSize] = {0};
-    int indices[NumIndices];
-    int data[DataSize];
+    int matrix[matrixSize][matrixSize] = {0};
+    int indices[numIndices];
+    int data[dataSize];
 
-    // Initialize random seed based on current time
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
-    // Populate the index array and data array with random values
-    for (int i = 0; i < NumIndices; ++i) {
-        indices[i] = std::rand() % (MatrixSize * MatrixSize);
+    // Initialize indices and data randomly (for demonstration purposes)
+    std::srand(static_cast<unsigned int>(std::time(0))); // Use time(0) instead of nullptr
+    for (int i = 0; i < numIndices; ++i) {
+        indices[i] = std::rand() % (matrixSize * matrixSize);
         data[i] = std::rand();
     }
 
     // Perform the Scatter operation
-    ScatterData(matrix, indices, data);
+    scatter(matrix, indices, data);
 
     // Display the resulting matrix (for demonstration purposes)
     std::cout << "Resulting Matrix:" << std::endl;
-    for (int row = 0; row < MatrixSize; ++row) {
-        for (int col = 0; col < MatrixSize; ++col) {
+    for (int row = 0; row < matrixSize; ++row) {
+        for (int col = 0; col < matrixSize; ++col) {
             std::cout << matrix[row][col] << " ";
         }
         std::cout << std::endl;
