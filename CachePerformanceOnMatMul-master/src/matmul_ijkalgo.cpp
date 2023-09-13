@@ -3,8 +3,9 @@
 #include <cstdlib>
 #include <ctime>
 
-const int matrixSize = 128;
-const int kernelSize = 3;
+const int matrixSize = 128; // Change matrix size here
+const int numIndices = 1000;
+const int dataSize = 1000;
 void parsec_roi_begin() 
 {
 
@@ -15,45 +16,41 @@ void parsec_roi_end()
 
 }
 
-void convolution(const int inputMatrix[matrixSize][matrixSize], int outputMatrix[matrixSize][matrixSize], const int kernel[kernelSize][kernelSize]) {
-    for (int i = 1; i < matrixSize - 1; ++i) {
-        for (int j = 1; j < matrixSize - 1; ++j) {
-            int sum = 0;
-            for (int k = -1; k <= 1; ++k) {
-                for (int l = -1; l <= 1; ++l) {
-                    sum += inputMatrix[i + k][j + l] * kernel[k + 1][l + 1];
-                }
-            }
-            outputMatrix[i][j] = sum;
+
+void scatter(int matrix[matrixSize][matrixSize], int indices[numIndices], int data[dataSize]) {
+    for (int i = 0; i < numIndices; ++i) {
+        int row = indices[i] % matrixSize;
+        int col = indices[i] / matrixSize;
+        if (row < matrixSize && col < matrixSize) {
+            matrix[row][col] = data[i];
         }
     }
 }
 
 int main() {
-    int inputMatrix[matrixSize][matrixSize];
-    int outputMatrix[matrixSize][matrixSize];
-    int kernel[kernelSize][kernelSize] = {{-1, -1, -1}, {-1, 8, -1}, {-1, -1, -1}};
+    int matrix[matrixSize][matrixSize] = {0};
+    int indices[numIndices];
+    int data[dataSize];
 
-    // Initialize inputMatrix with random data (for demonstration purposes)
-    std::srand(static_cast<unsigned int>(std::time(NULL)));
-    for (int i = 0; i < matrixSize; ++i) {
-        for (int j = 0; j < matrixSize; ++j) {
-            inputMatrix[i][j] = std::rand();
-        }
+    // Initialize indices and data randomly (for demonstration purposes)
+    std::srand(static_cast<unsigned int>(std::time(0))); // Use time(0) instead of nullptr
+    for (int i = 0; i < numIndices; ++i) {
+        indices[i] = std::rand() % (matrixSize * matrixSize);
+        data[i] = std::rand();
     }
 
-    // Perform the Convolution operation
-    convolution(inputMatrix, outputMatrix, kernel);
+    // Perform the Scatter operation
+    parsec_roi_begin();
+    scatter(matrix, indices, data);
+    parsec_roi_end();
 
-    // Display the resulting outputMatrix (for demonstration purposes)
-    std::cout << "Resulting Output Matrix:" << std::endl;
-    for (int i = 0; i < matrixSize; ++i) {
-        for (int j = 0; j < matrixSize; ++j) {
-            std::cout << outputMatrix[i][j] << " ";
+    // Display the resulting matrix (for demonstration purposes)
+    std::cout << "Resulting Matrix:" << std::endl;
+    for (int row = 0; row < matrixSize; ++row) {
+        for (int col = 0; col < matrixSize; ++col) {
+            std::cout << matrix[row][col] << " ";
         }
-        parsec_roi_begin();
         std::cout << std::endl;
-        parsec_roi_end();
     }
 
     return 0;
